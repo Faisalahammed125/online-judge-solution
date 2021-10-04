@@ -25,10 +25,7 @@ using namespace std;
 #define    lcm(a,b)        (a*(b/gcd(a,b)))
 #define    srtc(a,b)        sort(a,a+b,greater<int>())
 #define    pi               acos(-1.00)
-#define    mod              1000000007
 #define _ios ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
-
-
 /*
 //find the position of 0 or 1 in binary representation
 int zero(int n)
@@ -51,54 +48,29 @@ const int dy[] = {+0,+0,+1,-1};
 //const int dx[] = {-2,-2,-1,-1,+1,+1,+2,+2}; ///knight's move
 //const int dy[] = {-1,+1,-2,+2,-2,+2,-1,+1}; ///knight's move
 //---------------------------------------------------------------
-int t;
+const int N=100005;
+int phi[N];
+int res[N];
+int t,i;
 string s;
-vll primes;
-mll power;
-mll mul;
 
-ll pow(ll x,ll k){
-    ll res=1;
-    while(k){
-        if(k%2){
-            res=((res%mod)*(x%mod))%mod;
-            k--;
-        }
-        else{
-            x=((x%mod)*(x%mod))%mod;
-            k/=2;
-        }
-    }
-    return res;
+void toitent()
+{
+    rep(i,1,N-1)phi[i]=i;
+    rep(i,2,N-1)if(phi[i]==i)for(int j=i;j<N;j+=i)phi[j]-=phi[j]/i;
+    rep(i,1,N-1)res[i]+=res[i-1]+i-phi[i];
 }
-
 int main()
 {
     _ios;
-    int t;
+    toitent();
     cin>>t;
-    ll tp=0;
-    ll n=1;
-    ll ndiv=1;
-    ll sdiv=1;
-    ll pdiv=1;
-    for(int i=0;i<t;i++){
-        ll x,k;
-        cin>>x>>k;
-        primes.pb(x);
-        power[x]=k;
-        tp+=(k+1);
-        ndiv=((ndiv%mod)*((k+1)%mod))%mod;
-        n=n*pow(x,k);
+    rep(i,1,t)
+    {
+        int n;
+        cin>>n;
+        cout<<"Case "<<i<<": "<<res[n]<<endl;
     }
-    //cout<<ndiv<<endl;
-    for(ll p : primes){
-        sdiv=((sdiv%mod)*(((pow(p,power[p]+1)-1)/(p-1))%mod))%mod;
-    }
-    ll sq=sqrt(n);
-    if(ndiv==3)pdiv=(sq*n)%mod;
-    else pdiv=pow(n,ndiv/2)%mod;
-    cout<<ndiv<<" "<<sdiv<<" "<<pdiv<<endl;
     return 0;
 }
 

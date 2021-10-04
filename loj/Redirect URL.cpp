@@ -6,7 +6,7 @@ using namespace std;
 #define    maxv(v)         *max_element(all(v))
 #define    unq(v)           sort(all(v)),v.erase(unique(all(v)),v.end())
 #define    w(x)             while(x--)
-#define    rep(i,a,b)       for(i=a;i<=b;i++)
+#define    rep(i,a,b)       for(int i=a;i<=b;i++)
 #define    ll               long long
 #define    pb               push_back
 #define    vii              vector<int>
@@ -25,10 +25,7 @@ using namespace std;
 #define    lcm(a,b)        (a*(b/gcd(a,b)))
 #define    srtc(a,b)        sort(a,a+b,greater<int>())
 #define    pi               acos(-1.00)
-#define    mod              1000000007
 #define _ios ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
-
-
 /*
 //find the position of 0 or 1 in binary representation
 int zero(int n)
@@ -53,52 +50,23 @@ const int dy[] = {+0,+0,+1,-1};
 //---------------------------------------------------------------
 int t;
 string s;
-vll primes;
-mll power;
-mll mul;
-
-ll pow(ll x,ll k){
-    ll res=1;
-    while(k){
-        if(k%2){
-            res=((res%mod)*(x%mod))%mod;
-            k--;
-        }
-        else{
-            x=((x%mod)*(x%mod))%mod;
-            k/=2;
-        }
-    }
-    return res;
-}
-
 int main()
 {
     _ios;
-    int t;
     cin>>t;
-    ll tp=0;
-    ll n=1;
-    ll ndiv=1;
-    ll sdiv=1;
-    ll pdiv=1;
-    for(int i=0;i<t;i++){
-        ll x,k;
-        cin>>x>>k;
-        primes.pb(x);
-        power[x]=k;
-        tp+=(k+1);
-        ndiv=((ndiv%mod)*((k+1)%mod))%mod;
-        n=n*pow(x,k);
+    for(int i=1;i<=t;i++){
+        cin>>s;
+        cout<<"Case "<<i<<": ";
+        if(s[4]=='s')cout<<s<<endl;
+        else{
+            for(int it=0;it<s.size();it++){
+                    if(it==4)cout<<'s';
+                    cout<<s[it];
+            }
+            cout<<endl;
+
+        }
     }
-    //cout<<ndiv<<endl;
-    for(ll p : primes){
-        sdiv=((sdiv%mod)*(((pow(p,power[p]+1)-1)/(p-1))%mod))%mod;
-    }
-    ll sq=sqrt(n);
-    if(ndiv==3)pdiv=(sq*n)%mod;
-    else pdiv=pow(n,ndiv/2)%mod;
-    cout<<ndiv<<" "<<sdiv<<" "<<pdiv<<endl;
     return 0;
 }
 

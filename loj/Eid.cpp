@@ -10,11 +10,11 @@ int main ()
         cin>>n;
         ll gcd,lcm;
         cin>>arr[0];
-        lcm=arr[0];
+        gcd=lcm=arr[0];
         for(ll i=1;i<n;i++)
         {
            cin>>arr[i];
-           gcd=__gcd(arr[i],lcm) ;
+           gcd=__gcd(arr[i],gcd) ;
            lcm=(arr[i]*lcm)/gcd;
         }
         printf("Case %lld: %lld\n",tt,lcm);
