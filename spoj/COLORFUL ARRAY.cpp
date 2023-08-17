@@ -13,38 +13,46 @@
 #define  rep(i,a,b)   for(int i = a; i <= b; i++)
 #define  irep(i,b,a)  for(int i = b; i >= a; i--)
 using namespace std;
-const int N = 5e5 + 5;
+const int N = 2e5 + 5;
+
+int par[N], col[N];
+
+int find(int x) {
+	if (par[x] == x)return x;
+	return par[x] = find(par[x]);
+}
+
+void connect(int u, int v) {
+	int a = find(u);
+	int b = find(v);
+	par[u] = max(a, b);
+	par[v] = max(a, b);
+}
 
 void solve(int t) {
-	int n;
-	cin >> n;
-	int arr[n + 5];
-	int high = 0;
-	for (int i = 0; i < n; i++) {
-		cin >> arr[i];
-		high = max(high, arr[i]);
+	int n, q; cin >> n >> q;
+	int l[q], r[q], c[q];
+	rep(i, 1, n + 1) par[i] = i;
+	rep(i, 0, q - 1) {
+		cin >> l[i] >> r[i] >> c[i];
 	}
-	int divisors[high + 1] = {0};
-	for (int i = 0; i < n; i++) {
-		for (int j = 1; j * j <= arr[i]; j++) {
-			if (arr[i] % j == 0) {
-				divisors[j]++;
-				if (j != arr[i] / j)divisors[arr[i] / j]++;
-			}
+	irep(i, q - 1, 0) {
+		int next = find(l[i]);
+		while (next <= r[i]) {
+			col[next] = c[i];
+			// if (next + 1 > n)break;
+			connect(next, next + 1);
+			next = find(next);
 		}
 	}
-	for (int i = high; i >= 1; i--) {
-		if (divisors[i] > 1) {
-			cout << i << endl;
-			break;
-		}
-	}
+	rep(i, 1, n)cout << col[i] << endl;
 }
 
 signed main()
 {
 	ios::sync_with_stdio(0);
 	cin.tie(0);
+	cout.tie(0);
 	int T = 1;
 	// cin >> T;
 	for (int t = 1; t <= T; t++) {

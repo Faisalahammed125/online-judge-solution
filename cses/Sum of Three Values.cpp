@@ -16,29 +16,25 @@ using namespace std;
 const int N = 5e5 + 5;
 
 void solve(int t) {
-	int n;
-	cin >> n;
-	int arr[n + 5];
-	int high = 0;
-	for (int i = 0; i < n; i++) {
-		cin >> arr[i];
-		high = max(high, arr[i]);
+	int n, sum; cin >> n >> sum;
+	vector<PII>ar;
+	rep(i, 0, n - 1) {
+		int x; cin >> x;
+		ar.pb({x, i + 1});
 	}
-	int divisors[high + 1] = {0};
-	for (int i = 0; i < n; i++) {
-		for (int j = 1; j * j <= arr[i]; j++) {
-			if (arr[i] % j == 0) {
-				divisors[j]++;
-				if (j != arr[i] / j)divisors[arr[i] / j]++;
+	sort(all(ar));
+	rep(i, 0, n - 3) {
+		int j = i + 1, k = n - 1;
+		while (j < k) {
+			if (ar[i].ff + ar[j].ff + ar[k].ff == sum) {
+				cout << ar[i].ss << " " << ar[j].ss << " " << ar[k].ss << endl;
+				return;
 			}
+			if (ar[i].ff + ar[j].ff + ar[k].ff < sum)j++;
+			else k--;
 		}
 	}
-	for (int i = high; i >= 1; i--) {
-		if (divisors[i] > 1) {
-			cout << i << endl;
-			break;
-		}
-	}
+	cout << "IMPOSSIBLE" << endl;
 }
 
 signed main()

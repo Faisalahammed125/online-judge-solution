@@ -18,35 +18,30 @@ const int N = 5e5 + 5;
 void solve(int t) {
 	int n;
 	cin >> n;
-	int arr[n + 5];
-	int high = 0;
-	for (int i = 0; i < n; i++) {
-		cin >> arr[i];
-		high = max(high, arr[i]);
+	vector<PII>vec;
+	rep(i, 1, n) {
+		int x, y;
+		cin >> x >> y;
+		vec.pb({y, x});
 	}
-	int divisors[high + 1] = {0};
-	for (int i = 0; i < n; i++) {
-		for (int j = 1; j * j <= arr[i]; j++) {
-			if (arr[i] % j == 0) {
-				divisors[j]++;
-				if (j != arr[i] / j)divisors[arr[i] / j]++;
-			}
+	sort(all(vec));
+	int ans = 0, cur_end = 0;
+	for (auto it : vec) {
+		if (it.ss >= cur_end) {
+			cur_end = it.ff;
+			ans++;
 		}
 	}
-	for (int i = high; i >= 1; i--) {
-		if (divisors[i] > 1) {
-			cout << i << endl;
-			break;
-		}
-	}
+	cout << ans << endl;
 }
 
 signed main()
 {
-	ios::sync_with_stdio(0);
-	cin.tie(0);
+	// ios::sync_with_stdio(0);
+	// cin.tie(0);
+	// cout.tie(0);
 	int T = 1;
-	// cin >> T;
+	// cin>>T;
 	for (int t = 1; t <= T; t++) {
 		solve(t);
 	}

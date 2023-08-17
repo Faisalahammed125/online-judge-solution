@@ -16,37 +16,31 @@ using namespace std;
 const int N = 5e5 + 5;
 
 void solve(int t) {
-	int n;
-	cin >> n;
-	int arr[n + 5];
-	int high = 0;
-	for (int i = 0; i < n; i++) {
-		cin >> arr[i];
-		high = max(high, arr[i]);
+	int n; cin >> n;
+	vector<int>vec(n + 1);
+	for (int i = 1; i <= n; i++)cin >> vec[i];
+	vec[0] = 0;
+	for (int i = 2; i <= n; i++) {
+		if (vec[i] % vec[i - 1] == 0)vec[i - 1]++;
+		if (i - 2 == 0)continue;
+		if (vec[i - 1] % vec[i - 2] == 0)vec[i - 1]++;
 	}
-	int divisors[high + 1] = {0};
-	for (int i = 0; i < n; i++) {
-		for (int j = 1; j * j <= arr[i]; j++) {
-			if (arr[i] % j == 0) {
-				divisors[j]++;
-				if (j != arr[i] / j)divisors[arr[i] / j]++;
-			}
-		}
+	if (n == 1) {
+		cout << vec[1] << endl;
+		return;
 	}
-	for (int i = high; i >= 1; i--) {
-		if (divisors[i] > 1) {
-			cout << i << endl;
-			break;
-		}
-	}
+	if (vec[n] % vec[n - 1] == 0)vec[n]++;
+	for (int i = 1; i <= n; i++)cout << vec[i] << " ";
+	cout << endl;
 }
 
 signed main()
 {
 	ios::sync_with_stdio(0);
 	cin.tie(0);
+	cout.tie(0);
 	int T = 1;
-	// cin >> T;
+	cin >> T;
 	for (int t = 1; t <= T; t++) {
 		solve(t);
 	}

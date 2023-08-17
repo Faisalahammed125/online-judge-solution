@@ -15,38 +15,35 @@
 using namespace std;
 const int N = 5e5 + 5;
 
+int dp[70][70];
+string inp;
+
+int wow(int i, int j) {
+	if (i > j)return 0;
+	if (dp[i][j] != -1)return dp[i][j];
+	else {
+		///if the character matches
+		if (inp[i] == inp[j])
+			return dp[i][j] = wow(i, j - 1) + wow(i + 1, j) + 1;
+		///if the character doesn't match
+		///the reason for subtracting (i+1,j-1) is the previous two item add (i+1,j-1) which is not required cz character doesnt match
+		else return dp[i][j] = wow(i, j - 1) + wow(i + 1, j) - wow(i + 1, j - 1);
+	}
+}
+
 void solve(int t) {
-	int n;
-	cin >> n;
-	int arr[n + 5];
-	int high = 0;
-	for (int i = 0; i < n; i++) {
-		cin >> arr[i];
-		high = max(high, arr[i]);
-	}
-	int divisors[high + 1] = {0};
-	for (int i = 0; i < n; i++) {
-		for (int j = 1; j * j <= arr[i]; j++) {
-			if (arr[i] % j == 0) {
-				divisors[j]++;
-				if (j != arr[i] / j)divisors[arr[i] / j]++;
-			}
-		}
-	}
-	for (int i = high; i >= 1; i--) {
-		if (divisors[i] > 1) {
-			cout << i << endl;
-			break;
-		}
-	}
+	cin >> inp;
+	memset(dp, -1, sizeof(dp));
+	cout << "Case " << t << ": " << wow(0, inp.size() - 1) << endl;
 }
 
 signed main()
 {
 	ios::sync_with_stdio(0);
 	cin.tie(0);
+	cout.tie(0);
 	int T = 1;
-	// cin >> T;
+	cin >> T;
 	for (int t = 1; t <= T; t++) {
 		solve(t);
 	}

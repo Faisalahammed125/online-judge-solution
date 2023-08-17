@@ -13,32 +13,29 @@
 #define  rep(i,a,b)   for(int i = a; i <= b; i++)
 #define  irep(i,b,a)  for(int i = b; i >= a; i--)
 using namespace std;
-const int N = 5e5 + 5;
+const int N = 2e5 + 5;
+vector<int>adj[N];
+int dia = 0;
+int len[N];
+
+void dfs(int node, int par) {
+	for (int x : adj[node]) {
+		if (x == par)continue;
+		dfs(x, node);
+		len[node] = max(len[node], len[x] + 1);
+	}
+	if (par != -1)dia = max(dia, len[node] + len[par] + 1);
+}
 
 void solve(int t) {
-	int n;
-	cin >> n;
-	int arr[n + 5];
-	int high = 0;
-	for (int i = 0; i < n; i++) {
-		cin >> arr[i];
-		high = max(high, arr[i]);
+	int n; cin >> n;
+	rep(i, 1, n - 1) {
+		int x, y; cin >> x >> y;
+		adj[x].pb(y);
+		adj[y].pb(x);
 	}
-	int divisors[high + 1] = {0};
-	for (int i = 0; i < n; i++) {
-		for (int j = 1; j * j <= arr[i]; j++) {
-			if (arr[i] % j == 0) {
-				divisors[j]++;
-				if (j != arr[i] / j)divisors[arr[i] / j]++;
-			}
-		}
-	}
-	for (int i = high; i >= 1; i--) {
-		if (divisors[i] > 1) {
-			cout << i << endl;
-			break;
-		}
-	}
+	dfs(1, -1);
+	cout << dia << endl;
 }
 
 signed main()

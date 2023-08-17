@@ -1,106 +1,73 @@
+//BISMILLAHIR RAHMANIR RAHEEM
 #include<bits/stdc++.h>
+#define  MX           100005
+#define  ff           first
+#define  ss           second
+#define  pb           push_back
+#define  int          long long
+#define  endl         "\n"
+#define  PII          pair<int,int>
+#define  all(v)       v.begin(),v.end()
+#define  pi           acos(-1)
+#define  mod          1000000007
+#define  rep(i,a,b)   for(int i = a; i <= b; i++)
+#define  irep(i,b,a)  for(int i = b; i >= a; i--)
 using namespace std;
-#define    bit(a)          __builtin_popcount(a)
-#define    all(x)           x.begin(), x.end()
-#define    minv(v)         *min_element(all(v))
-#define    maxv(v)         *max_element(all(v))
-#define    unq(v)           sort(all(v)),v.erase(unique(all(v)),v.end())
-#define    w(x)             while(x--)
-#define    rep(i,a,b)       for(i=a;i<=b;i++)
-#define    ll               long long
-#define    pb               push_back
-#define    vii              vector<int>
-#define    vll              vector<ll>
-#define    vcc              vector<char>
-#define    sii              set<int>
-#define    sll              set<ll>
-#define    scc              set<char>
-#define    li               list<int>
-#define    pii              pair<int,int>
-#define    pll              pair<ll,ll>
-#define    mii              map<int,int>
-#define    mll              map<ll,ll>
-#define    fill(arr,x)      memset(arr,x,sizeof(arr))
-#define    gcd(a,b)         __gcd(a,b)
-#define    lcm(a,b)        (a*(b/gcd(a,b)))
-#define    srtc(a,b)        sort(a,a+b,greater<int>())
-#define    pi               acos(-1.00)
-#define    mod              1000000007
-#define _ios ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+const int N = 5e5 + 5;
 
-
-/*
-//find the position of 0 or 1 in binary representation
-int zero(int n)
-{
-    int i=1,pos=0;
-    while(n)
-    {
-        if(n%2==0)pos=i;
-        n/=2;
-        i++;
+int power(int x, int k) {
+    int res = 1;
+    while (k) {
+        if (k & 1)res = (res * x) % mod;
+        x = (x * x) % mod;
+        k >>= 1;
     }
-    return pos;
+    return res % mod;
 }
-*/
-//--------------Graph Moves--------------------------------------
-const int dx[] = {+1,-1,+0,+0};
-const int dy[] = {+0,+0,+1,-1};
-//const int dx[] = {+0,+0,+1,-1,-1,+1,-1,+1}; ///King's move
-//const int dy[] = {-1,+1,+0,+0,+1,+1,-1,-1}; ///king's Move
-//const int dx[] = {-2,-2,-1,-1,+1,+1,+2,+2}; ///knight's move
-//const int dy[] = {-1,+1,-2,+2,-2,+2,-1,+1}; ///knight's move
-//---------------------------------------------------------------
-int t;
-string s;
-vll primes;
-mll power;
-mll mul;
-
-ll pow(ll x,ll k){
-    ll res=1;
-    while(k){
-        if(k%2){
-            res=((res%mod)*(x%mod))%mod;
-            k--;
+int geo_sum(int x, int k) {
+    int nr = (power(x, k + 1) - 1 + mod) % mod;
+    int dr = power(x - 1, mod - 2);
+    return (nr * dr) % mod;
+}
+void solve(int t) {
+    int npd; cin >> npd;
+    vector<int>prime, exp;
+    int n = 1, ndiv = 1, pdiv = 1, sdiv = 1, nd = 1;
+    bool odd = false;
+    while (npd--) {
+        int pd, f; cin >> pd >> f;
+        prime.pb(pd); exp.pb(f);
+        if (!odd && (f & 1)) {
+            odd = true;
+            nd = (nd * (f + 1) / 2) % (mod - 1);
         }
-        else{
-            x=((x%mod)*(x%mod))%mod;
-            k/=2;
+        else nd = (nd * (f + 1)) % (mod - 1);
+        ndiv = (ndiv * (f + 1)) % mod;
+        sdiv = (sdiv * geo_sum(pd, f)) % mod;
+        n *= power(pd, f) % mod;
+    }
+    if (odd) {
+        for (int i = 0; i < prime.size(); i++) {
+            pdiv = (pdiv * power(prime[i], (exp[i] * nd) % (mod - 1))) % mod;
         }
     }
-    return res;
+    else {
+        for (int i = 0; i < prime.size(); i++) {
+            pdiv = (pdiv * power(prime[i], ((exp[i] / 2) * nd) % (mod - 1))) % mod;
+        }
+    }
+    cout << ndiv << " " << sdiv << " " << pdiv << endl;
 }
 
-int main()
+signed main()
 {
-    _ios;
-    int t;
-    cin>>t;
-    ll tp=0;
-    ll n=1;
-    ll ndiv=1;
-    ll sdiv=1;
-    ll pdiv=1;
-    for(int i=0;i<t;i++){
-        ll x,k;
-        cin>>x>>k;
-        primes.pb(x);
-        power[x]=k;
-        tp+=(k+1);
-        ndiv=((ndiv%mod)*((k+1)%mod))%mod;
-        n=n*pow(x,k);
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    int T = 1;
+    // cin>>T;
+    for (int t = 1; t <= T; t++) {
+        solve(t);
     }
-    //cout<<ndiv<<endl;
-    for(ll p : primes){
-        sdiv=((sdiv%mod)*(((pow(p,power[p]+1)-1)/(p-1))%mod))%mod;
-    }
-    ll sq=sqrt(n);
-    if(ndiv==3)pdiv=(sq*n)%mod;
-    else pdiv=pow(n,ndiv/2)%mod;
-    cout<<ndiv<<" "<<sdiv<<" "<<pdiv<<endl;
+
     return 0;
 }
-
-
-

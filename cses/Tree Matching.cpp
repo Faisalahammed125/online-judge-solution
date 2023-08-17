@@ -13,32 +13,33 @@
 #define  rep(i,a,b)   for(int i = a; i <= b; i++)
 #define  irep(i,b,a)  for(int i = b; i >= a; i--)
 using namespace std;
-const int N = 5e5 + 5;
+const int N = 2e5 + 5;
+int sub[N];
+vector<int>adj[N];
+int ans = 0;
+
+void dfs(int node, int par) {
+	for (int x : adj[node]) {
+		if (x == par)continue;
+		if (!sub[x])dfs(x, node);
+		sub[node] += sub[x] + 1;
+	}
+	if (sub[node]) {
+		ans++;
+		sub[par] -= (sub[node] + 1);
+	}
+}
+
 
 void solve(int t) {
-	int n;
-	cin >> n;
-	int arr[n + 5];
-	int high = 0;
-	for (int i = 0; i < n; i++) {
-		cin >> arr[i];
-		high = max(high, arr[i]);
+	int n; cin >> n;
+	rep(i, 1, n - 1) {
+		int x, y; cin >> x >> y;
+		adj[x].pb(y);
+		adj[y].pb(x);
 	}
-	int divisors[high + 1] = {0};
-	for (int i = 0; i < n; i++) {
-		for (int j = 1; j * j <= arr[i]; j++) {
-			if (arr[i] % j == 0) {
-				divisors[j]++;
-				if (j != arr[i] / j)divisors[arr[i] / j]++;
-			}
-		}
-	}
-	for (int i = high; i >= 1; i--) {
-		if (divisors[i] > 1) {
-			cout << i << endl;
-			break;
-		}
-	}
+	dfs(1, -1);
+	cout << ans << endl;
 }
 
 signed main()

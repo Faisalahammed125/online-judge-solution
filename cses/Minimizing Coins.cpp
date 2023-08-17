@@ -16,37 +16,29 @@ using namespace std;
 const int N = 5e5 + 5;
 
 void solve(int t) {
-	int n;
-	cin >> n;
-	int arr[n + 5];
-	int high = 0;
-	for (int i = 0; i < n; i++) {
-		cin >> arr[i];
-		high = max(high, arr[i]);
-	}
-	int divisors[high + 1] = {0};
-	for (int i = 0; i < n; i++) {
-		for (int j = 1; j * j <= arr[i]; j++) {
-			if (arr[i] % j == 0) {
-				divisors[j]++;
-				if (j != arr[i] / j)divisors[arr[i] / j]++;
+	int n, target;
+	cin >> n >> target;
+	vector<int> coin(n);
+	for (int &x : coin)cin >> x;
+	vector<int> dp(target + 1, 1e9);
+	dp[0] = 0;
+	for (int i = 1; i <= target; i++) {
+		for (int val : coin) {
+			if (i - val >= 0) {
+				dp[i] = min(dp[i], dp[i - val] + 1);
 			}
 		}
 	}
-	for (int i = high; i >= 1; i--) {
-		if (divisors[i] > 1) {
-			cout << i << endl;
-			break;
-		}
-	}
+	cout << (dp[target] == 1e9 ? -1 : dp[target]) << endl;
 }
 
 signed main()
 {
 	ios::sync_with_stdio(0);
 	cin.tie(0);
+	cout.tie(0);
 	int T = 1;
-	// cin >> T;
+	//cin>>T;
 	for (int t = 1; t <= T; t++) {
 		solve(t);
 	}

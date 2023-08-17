@@ -13,40 +13,53 @@
 #define  rep(i,a,b)   for(int i = a; i <= b; i++)
 #define  irep(i,b,a)  for(int i = b; i >= a; i--)
 using namespace std;
-const int N = 5e5 + 5;
+const int N = 1e6 + 5;
+
+bool nonprime[N];
+int fearPrime[N];
+
+bool fear(int n) {
+	int x = n, md = 10;
+	while (x) {
+		if (x % 10 == 0)return false;
+		x /= 10;
+	}
+	x = 0;
+	while (!nonprime[x] && x < n) {
+		x = n % md;
+		md *= 10;
+	}
+	return (x == n);
+}
+
+void sieve() {
+	nonprime[1] = 1;
+	for (int i = 2; i * i < N; i++) {
+		if (!nonprime[i]) {
+			for (int j = i * i; j < N; j += i)nonprime[j] = 1;
+		}
+	}
+	for (int i = 2; i < N; i++) {
+		if (!nonprime[i]) {
+			if (fear(i))fearPrime[i]++;
+		}
+		fearPrime[i] += fearPrime[i - 1];
+	}
+}
 
 void solve(int t) {
-	int n;
-	cin >> n;
-	int arr[n + 5];
-	int high = 0;
-	for (int i = 0; i < n; i++) {
-		cin >> arr[i];
-		high = max(high, arr[i]);
-	}
-	int divisors[high + 1] = {0};
-	for (int i = 0; i < n; i++) {
-		for (int j = 1; j * j <= arr[i]; j++) {
-			if (arr[i] % j == 0) {
-				divisors[j]++;
-				if (j != arr[i] / j)divisors[arr[i] / j]++;
-			}
-		}
-	}
-	for (int i = high; i >= 1; i--) {
-		if (divisors[i] > 1) {
-			cout << i << endl;
-			break;
-		}
-	}
+	int n; cin >> n;
+	cout << fearPrime[n] << endl;
 }
 
 signed main()
 {
 	ios::sync_with_stdio(0);
 	cin.tie(0);
+	cout.tie(0);
+	sieve();
 	int T = 1;
-	// cin >> T;
+	cin >> T;
 	for (int t = 1; t <= T; t++) {
 		solve(t);
 	}

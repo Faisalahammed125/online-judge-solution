@@ -13,40 +13,42 @@
 #define  rep(i,a,b)   for(int i = a; i <= b; i++)
 #define  irep(i,b,a)  for(int i = b; i >= a; i--)
 using namespace std;
-const int N = 5e5 + 5;
+const int N = 1e6 + 5;
+
+int spf[N];
+
+void sieve() {
+	for (int i = 2; i < N; i++)spf[i] = i;
+	for (int i = 2; i * i < N; i++) {
+		if (spf[i] == i) {
+			for (int j = i * 2; j < N; j += i)
+				if (spf[j] == j)spf[j] = i;
+		}
+	}
+}
 
 void solve(int t) {
-	int n;
-	cin >> n;
-	int arr[n + 5];
-	int high = 0;
-	for (int i = 0; i < n; i++) {
-		cin >> arr[i];
-		high = max(high, arr[i]);
+	int n; cin >> n;
+	vector<int>primeDiv;
+	while (n != 1) {
+		int d = spf[n];
+		primeDiv.pb(d);
+		while (n % d == 0)n /= d;
 	}
-	int divisors[high + 1] = {0};
-	for (int i = 0; i < n; i++) {
-		for (int j = 1; j * j <= arr[i]; j++) {
-			if (arr[i] % j == 0) {
-				divisors[j]++;
-				if (j != arr[i] / j)divisors[arr[i] / j]++;
-			}
-		}
-	}
-	for (int i = high; i >= 1; i--) {
-		if (divisors[i] > 1) {
-			cout << i << endl;
-			break;
-		}
-	}
+	sort(all(primeDiv));
+	cout << "Case " << t << ": ";
+	for (int p : primeDiv)cout << p << " ";
+	cout << endl;
 }
 
 signed main()
 {
 	ios::sync_with_stdio(0);
 	cin.tie(0);
+	cout.tie(0);
+	sieve();
 	int T = 1;
-	// cin >> T;
+	cin >> T;
 	for (int t = 1; t <= T; t++) {
 		solve(t);
 	}

@@ -15,38 +15,36 @@
 using namespace std;
 const int N = 5e5 + 5;
 
+bool check(int x, int n) {
+	int tmp = (x + 1) / 2;
+	int val;
+	if (tmp & 1)val = ((tmp + 1) / 2) * tmp;
+	else val = (tmp / 2) * (tmp + 1);
+	val *= 2;
+	if (x & 1)val -= tmp;
+	if (val < n)return false;
+	else return true;
+}
+
 void solve(int t) {
-	int n;
-	cin >> n;
-	int arr[n + 5];
-	int high = 0;
-	for (int i = 0; i < n; i++) {
-		cin >> arr[i];
-		high = max(high, arr[i]);
+	int n; cin >> n;
+	int l = 1, r = 1e10 + 5;
+	while (l < r) {
+		int m = l + (r - l) / 2;
+		if (!check(m, n))l = m + 1;
+		else r = m;
+		// cout << l << " " << m << " " << r << endl;
 	}
-	int divisors[high + 1] = {0};
-	for (int i = 0; i < n; i++) {
-		for (int j = 1; j * j <= arr[i]; j++) {
-			if (arr[i] % j == 0) {
-				divisors[j]++;
-				if (j != arr[i] / j)divisors[arr[i] / j]++;
-			}
-		}
-	}
-	for (int i = high; i >= 1; i--) {
-		if (divisors[i] > 1) {
-			cout << i << endl;
-			break;
-		}
-	}
+	cout << l << endl;
 }
 
 signed main()
 {
-	ios::sync_with_stdio(0);
-	cin.tie(0);
+	// ios::sync_with_stdio(0);
+	// cin.tie(0);
+	// cout.tie(0);
 	int T = 1;
-	// cin >> T;
+	cin >> T;
 	for (int t = 1; t <= T; t++) {
 		solve(t);
 	}
