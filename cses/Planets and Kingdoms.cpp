@@ -17,6 +17,7 @@ const int N = 1e5 + 5;
 
 vector<int> adj[N], radj[N], order;
 vector<bool> vis;
+vector<int>kingdom;
 
 void dfs1(int node) {
 	vis[node] = 1;
@@ -26,10 +27,11 @@ void dfs1(int node) {
 	order.pb(node);
 }
 
-void dfs2(int node) {
+void dfs2(int node, int k) {
 	vis[node] = 1;
+	kingdom[node] = k;
 	for (int x : radj[node]) {
-		if (!vis[x])dfs2(x);
+		if (!vis[x])dfs2(x, k);
 	}
 }
 
@@ -46,19 +48,18 @@ void solve(int t) {
 			dfs1(i);
 	}
 	vis.assign(n + 1, false);
+	kingdom.assign(n + 1, 0);
 	reverse(all(order));
-	vector<int>ans;
+	int k = 0;
 	for (int x : order) {
 		if (!vis[x]) {
-			ans.pb(x);
-			dfs2(x);
+			k++;
+			dfs2(x, k);
 		}
 	}
-	if (ans.size() <= 1) {
-		cout << "YES" << endl;
-		return;
-	}
-	cout << "NO" << endl << ans[ans.size() - 1] << " " << ans[ans.size() - 2] << endl;
+	cout << k << endl;
+	for (int i = 1; i <= n; i++)cout << kingdom[i] << " ";
+	cout << endl;
 }
 
 signed main()

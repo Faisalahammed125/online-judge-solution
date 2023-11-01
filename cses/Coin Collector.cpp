@@ -15,8 +15,11 @@
 using namespace std;
 const int N = 1e5 + 5;
 
-vector<int> adj[N], radj[N], order;
+vector<int> adj[N], radj[N], order, adj2[N];
 vector<bool> vis;
+vector<int>scc;
+map<PII, int>done;
+int coin[N], cnt, cost[N];
 
 void dfs1(int node) {
 	vis[node] = 1;
@@ -26,15 +29,43 @@ void dfs1(int node) {
 	order.pb(node);
 }
 
-void dfs2(int node) {
+void dfs2(int node, int k) {
 	vis[node] = 1;
+	scc[node] = k;
+	cnt += coin[node];
 	for (int x : radj[node]) {
-		if (!vis[x])dfs2(x);
+		if (!vis[x])dfs2(x, k);
 	}
+}
+
+void make_Condensation_graph(int n) {
+	for (int i = 1; i <= n; i++) {
+		for (int ch : adj[i]) {
+			int x = scc[ch];
+			int y = scc[i];
+			if (x != y && !done[ {x, y}]) {
+				done[ {x, y}]++;
+				adj2[x].pb(y);
+			}
+		}
+	}
+}
+
+void dfs3(int node) {
+	int mx = 0;
+	vis[node] = 1;
+	for (int x : adj2[node]) {
+		if (!vis[x]) {
+			dfs3(x);
+		}
+		mx = max(mx, cost[x]);
+	}
+	cost[node] += mx;
 }
 
 void solve(int t) {
 	int n, m; cin >> n >> m;
+	for (int i = 1; i <= n; i++)cin >> coin[i];
 	while (m--) {
 		int x, y; cin >> x >> y;
 		adj[x].pb(y);
@@ -46,19 +77,26 @@ void solve(int t) {
 			dfs1(i);
 	}
 	vis.assign(n + 1, false);
+	scc.assign(n + 1, 0);
 	reverse(all(order));
-	vector<int>ans;
+	int k = 0;
 	for (int x : order) {
 		if (!vis[x]) {
-			ans.pb(x);
-			dfs2(x);
+			k++;
+			dfs2(x, k);
+			cost[k] = cnt;
+			cnt = 0;
 		}
 	}
-	if (ans.size() <= 1) {
-		cout << "YES" << endl;
-		return;
+	make_Condensation_graph(n);
+	vis.assign(k + 1, false);
+	for (int i = 1; i <= k; i++) {
+		if (!vis[i])
+			dfs3(i);
 	}
-	cout << "NO" << endl << ans[ans.size() - 1] << " " << ans[ans.size() - 2] << endl;
+	int ans = 0;
+	for (int i = 1; i <= n; i++)ans = max(ans, cost[i]);
+	cout << ans << endl;
 }
 
 signed main()
